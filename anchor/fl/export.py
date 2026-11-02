@@ -3,7 +3,7 @@
 For each fold, the final global model (MIL + theta) scores the test biopsies of every centre (`--test-set`, a merged
 set). Centre heads use theta + delta_c, with delta_c
   * the phase-1 offsets (`--phase1-dir`; ANCHOR, fixed during training),
-  * the clients' own trained offsets (`--offsets trainable`, the last round's `<client>/delta.json`; FedRep-type), or
+  * the clients' own trained offsets (`--offsets trainable`, the last round's `<client>/results/delta.json`; FedRep-type), or
   * 0 (`--offsets none`; BaseFed, GLC),
 and the consensus head uses theta + mean_c delta_c. With `--glc`, centre c's head is p(z | x) C_c (C_c from the
 client set's transition.json). With `--anchor-set`, the anchors are scored too and (theta, delta, alpha) are refitted on
@@ -61,7 +61,7 @@ def main() -> None:
         if mode == "phase1":
             delta = phase1_deltas(args.phase1_dir / fold, args.centres)
         elif mode == "trainable":
-            delta = np.array([json.loads((fold_dir / f"{c}_client" / "delta.json").read_text()) for c in args.centres])
+            delta = np.array([json.loads((fold_dir / f"{c}_client" / "results" / "delta.json").read_text()) for c in args.centres])
         else:
             delta = np.zeros((len(args.centres), len(theta)))
         test = pd.read_csv(args.test_set / fold / "test_manifest.csv")

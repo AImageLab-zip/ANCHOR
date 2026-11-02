@@ -1,7 +1,13 @@
 # ANCHOR: anchored consensus heads with offsets per reader
 
-Code for *Personalisation is not Harmonisation: Anchoring Centre Grading Conventions in Prostate Biopsies*
+Code for **ANCHOR: From Centre Grading Conventions to a Common Scale in Prostate Biopsies**
 (ISBI 2027, under review).
+
+Giovanni Casari, Camilla Marella, Moira Ragazzi, Samanta Sacchi, Maurizio Colecchia, Nazario Tenace, Daniele Ravanelli,
+Sebastiano Cinalli, Alberto Cavazza, Mauro Iori, Federico Bolelli, Costantino Grana
+
+University of Modena and Reggio Emilia · Azienda USL–IRCCS di Reggio Emilia · IRCCS San Raffaele Scientific Institute,
+Milan · Santa Chiara Hospital, ASUIT, Trento
 
 Pathologists at different centres grade the same biopsy with systematic, threshold-specific conventions. When each
 centre grades only its own cases, as in federated learning, a centre's convention is confounded with its case mix, so
@@ -98,13 +104,20 @@ same tissue area on every scanner: 512 px at 0.2626 µm/px.
 ## Citation
 
 ```bibtex
-@inproceedings{anchor2027,
-  title     = {Personalisation is not Harmonisation: Anchoring Centre Grading Conventions in Prostate Biopsies},
+@inproceedings{casari2027anchor,
+  title     = {{ANCHOR}: From Centre Grading Conventions to a Common Scale in Prostate Biopsies},
+  author    = {Casari, Giovanni and Marella, Camilla and Ragazzi, Moira and Sacchi, Samanta and Colecchia, Maurizio and
+               Tenace, Nazario and Ravanelli, Daniele and Cinalli, Sebastiano and Cavazza, Alberto and Iori, Mauro and
+               Bolelli, Federico and Grana, Costantino},
   booktitle = {IEEE International Symposium on Biomedical Imaging (ISBI)},
   year      = {2027},
   note      = {Under review}
 }
 ```
+
+## License
+
+MIT (see `LICENSE`). PAR data and the UNI2-h weights come with their own terms.
 
 PAR cohort: Muhammad Ali et al., *Virchows Archiv* 2026 (doi:10.1007/s00428-026-04742-5). TraceReg loss adapted from
 [maml](https://github.com/ies-research/multi-annotator-machine-learning) (BSD-3).

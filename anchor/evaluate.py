@@ -30,6 +30,7 @@ K = 6
 REFS: pd.DataFrame | None = None
 CENTRES: list[str] = []
 MODELS: dict[str, list[dict[str, np.ndarray]]] = {}
+PARTIAL = False
 
 
 def load_run(run: Path, file: str) -> dict[str, np.ndarray]:
@@ -38,7 +39,8 @@ def load_run(run: Path, file: str) -> dict[str, np.ndarray]:
         raise FileNotFoundError(f"{run}: no fold_*/{file}")
     df = pd.concat([pd.read_csv(f) for f in files]).set_index("bag_id")
     pos = REFS.index.get_indexer(df.index)
-    assert (pos >= 0).all() and len(set(pos)) == len(pos) == len(REFS), f"{run}: test biopsies != slide table"
+    assert (pos >= 0).all() and len(set(pos)) == len(pos), f"{run}: unknown or repeated test biopsies"
+    assert PARTIAL or len(pos) == len(REFS), f"{run}: {len(pos)} of {len(REFS)} test biopsies (all folds needed)"
     out = {}
     for head in ("consensus", *CENTRES):
         cols = [f"prob_{head}_{k}" for k in range(K)]
@@ -79,7 +81,7 @@ def stats(idx: np.ndarray) -> dict[str, pd.DataFrame]:
 
 
 def main() -> None:
-    global REFS, CENTRES
+    global REFS, CENTRES, PARTIAL
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument("--table", type=Path, required=True)
     p.add_argument("--slides", type=Path, required=True, help="slides.csv of datasets/par/build_study.py")
@@ -87,12 +89,20 @@ def main() -> None:
     p.add_argument("--out", type=Path, required=True, help="Output prefix (.csv tables).")
     p.add_argument("--n-boot", type=int, default=1000)
     p.add_argument("--workers", type=int, default=8)
+    p.add_argument("--seeds", type=int, nargs="+", help="Override the seeds of the table spec.")
+    p.add_argument("--allow-partial", action="store_true", help="Evaluate on the biopsies the runs cover (smoke tests).")
     args = p.parse_args()
     spec = yaml.safe_load(args.table.read_text())
     CENTRES[:] = spec["centres"]
     REFS = pd.read_csv(args.slides).set_index("bag_id").astype({c: float for c in [*spec["centres"], "consensus"]})
+    PARTIAL = args.allow_partial
+    seeds = args.seeds or spec["seeds"]
+    if PARTIAL:  # keep the biopsies of the first run's prediction files
+        first = args.runs / spec["rows"][0]["runs"][0].format(seed=seeds[0], centre=CENTRES[0])
+        ids = pd.concat([pd.read_csv(f, usecols=["bag_id"]) for f in first.glob("fold_*/test_predictions.csv")])
+        REFS = REFS.loc[ids["bag_id"]]
     for row in spec["rows"]:
-        MODELS[row["name"]] = row_models(row, args.runs, spec["seeds"])
+        MODELS[row["name"]] = row_models(row, args.runs, seeds)
     point = stats(np.arange(len(REFS)))
     boot = PatientBootstrap(REFS["patient_id"], args.n_boot, 0)
     with ProcessPoolExecutor(args.workers) as pool:

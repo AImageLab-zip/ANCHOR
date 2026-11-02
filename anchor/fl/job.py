@@ -1,14 +1,14 @@
 """Run one federated experiment (FedAvg, NVIDIA FLARE simulator) on every cross-validation fold.
 
-    MANIFEST_ROOT=<manifests> python -m anchor.fl.job --config configs/par/fl_anchor_full.yaml \\
-        --features-root <features> --output-dir runs/par/anchor_full_s7 --seed 7 \\
-        --set manifest_set=own_anchor34_u6 --set phase1_dir=runs/par/phase1_N34_s7 \\
-        --set ai_offsets_dir=runs/par/ai_offsets_N34_s7
+    MANIFEST_ROOT=<manifests> python -m anchor.fl.job --config configs/par/fl_base.yaml \\
+        --features-root <features>/par3c --output-dir runs/par/anchor_full_s7 --seed 7 \\
+        --set manifest_set=own_anchors34_d0 --set offsets=fixed --set phase1_dir=runs/par/phase1_N34_s7 \\
+        --set second_column=label_ai --set ai_offsets_dir=runs/par/ai_offsets_N34_s7
 
 The YAML holds the server options (`clients`, `num_rounds`) and the client options of `anchor.fl.client` (underscored
 names); `--set key=value` overrides any of them. Each fold runs as its own job `<output-dir>/<fold>`; the final global
 model is `<output-dir>/<fold>/server/simulate_job/app_server/FL_global_model.pt` and each client's last local model
-(with its private offset) `<output-dir>/<fold>/<client>/last_model.pt`.
+(with its private offset) `<output-dir>/<fold>/<client>/results/{last_model.pt,delta.json}`.
 """
 from __future__ import annotations
 
@@ -75,7 +75,7 @@ def main() -> None:
         recipe = FedAvgRecipe(
             name=fold, min_clients=len(clients), num_rounds=rounds,
             model={"class_path": "anchor.models.GlobalOrdinalMIL", "args": model_args},
-            train_script="anchor/fl/client.py", train_args=shlex.join(argv))  # run from the repository root
+            train_script="anchor/fl/client.py", train_args=shlex.join(argv), key_metric="neg_loss")  # run from the repository root
         run = recipe.execute(SimEnv(clients=clients, workspace_root=str(args.output_dir.resolve())))
         print(f"{fold}: {run.get_status()} -> {run.get_result()}")
         if not (job_dir / GLOBAL_MODEL).exists():

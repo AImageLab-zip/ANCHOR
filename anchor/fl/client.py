@@ -126,7 +126,7 @@ def main() -> None:
     client = flare.system_info()["site_name"]
     site = client.removesuffix("_client")
     fold = Path(args.manifest_set).name
-    out = args.output_dir / client
+    out = args.output_dir / client / "results"
     out.mkdir(parents=True, exist_ok=True)
     root = args.manifest_root or Path(os.environ["MANIFEST_ROOT"])
     set_dir = root / client / args.manifest_set
@@ -190,7 +190,7 @@ def main() -> None:
         torch.save(model.state_dict(), out / "last_model.pt")
         (out / "delta.json").write_text(json.dumps(model.delta().detach().cpu().tolist()))  # applied private offset
         steps = round(len(loader) * args.epochs * args.aggregation_weight)
-        flare.send(flare.FLModel(params=params, meta={"NUM_STEPS_CURRENT_ROUND": steps}))
+        flare.send(flare.FLModel(params=params, metrics={"neg_loss": -loss}, meta={"NUM_STEPS_CURRENT_ROUND": steps}))
 
 
 if __name__ == "__main__":

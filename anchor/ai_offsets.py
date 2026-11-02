@@ -32,7 +32,7 @@ def main() -> None:
     p.add_argument("--out", type=Path, required=True)
     args = p.parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    for fold in fold_names(args.anchor_set):
+    for fold in fold_names(args.phase1_dir):
         model = load_phase1(args.phase1_dir / fold).to(device)
         anchors = pd.read_csv(args.anchor_set / fold / "train_manifest.csv")
         anchors = anchors[anchors["label_ai"] >= 0].reset_index(drop=True)

@@ -54,16 +54,20 @@ def main(argv=None) -> None:
     p.add_argument("--lmbda", type=float, default=1e-2)
     p.add_argument("--confusion-lr", type=float, default=1e-2)
     p.add_argument("--seed", type=int, default=7)
+    p.add_argument("--folds", nargs="*")
+    p.add_argument("--epochs", type=int)
     args = p.parse_args(argv)
     cfg = {"epochs": 30, "batch_size": 32, "lr": 5e-4, "weight_decay": 1e-4, "max_bag_size": 512, "num_classes": 6,
            "input_dim": 1536, "attention_dim": 128, "hidden_dim": 64, "dropout": 0.5, "num_workers": 4}
     if args.config:
         cfg.update({k: v for k, v in (yaml.safe_load(args.config.read_text()) or {}).items() if k in cfg})
+    if args.epochs:
+        cfg["epochs"] = args.epochs
     K = cfg["num_classes"]
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     cols = [f"label_{c}" for c in args.centres]
     annot = cols + ([args.ai_column] if args.ai_column else [])
-    for fold in fold_names(args.folds_dir):
+    for fold in args.folds or fold_names(args.folds_dir):
         out = args.output_dir / fold
         if (out / "test_predictions.csv").exists():
             continue

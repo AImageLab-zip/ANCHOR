@@ -1,13 +1,7 @@
-# ANCHOR: anchored consensus heads with offsets per reader
+# ANCHOR: ANchored Consensus Heads with Offsets per Reader
 
 Code for **ANCHOR: From Centre Grading Conventions to a Common Scale in Prostate Biopsies**
 (ISBI 2027, under review).
-
-Giovanni Casari, Camilla Marella, Moira Ragazzi, Samanta Sacchi, Maurizio Colecchia, Nazario Tenace, Daniele Ravanelli,
-Sebastiano Cinalli, Alberto Cavazza, Mauro Iori, Federico Bolelli, Costantino Grana
-
-University of Modena and Reggio Emilia · Azienda USL–IRCCS di Reggio Emilia · IRCCS San Raffaele Scientific Institute,
-Milan · Santa Chiara Hospital, ASUIT, Trento
 
 Pathologists at different centres grade the same biopsy with systematic, threshold-specific conventions. When each
 centre grades only its own cases, as in federated learning, a centre's convention is confounded with its case mix, so

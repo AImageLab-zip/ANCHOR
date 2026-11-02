@@ -1,0 +1,22 @@
+# Rows of Table 1 (PAR columns) for anchor.evaluate; run directories as written by scripts/run_par.sh.
+centres: [r1, r2, vir]
+seeds: [7, 8, 9]
+reference: Crossed
+best: ANCHOR-Full
+rows:
+  - {name: BaseFed, runs: ["basefed_s{seed}"]}
+  - {name: MedianLabels, runs: ["median_labels_s{seed}"]}
+  - {name: Crossed, runs: ["crossed_s{seed}"]}
+  - {name: Crossed + AI reader, runs: ["crossed_ai_s{seed}"]}
+  - {name: FedRep-type private head, runs: ["fedrep_s{seed}"]}
+  - {name: GLC on anchors, runs: ["glc_s{seed}"]}
+  - {name: TraceReg, runs: ["tracereg_s{seed}"]}
+  - {name: TraceReg + anchors, runs: ["tracereg_anchors_s{seed}"]}
+  - {name: ANCHOR-Fed, runs: ["anchor_fed_s{seed}"], file: test_predictions_refit.csv}
+  - {name: ANCHOR-Loc, runs: ["anchor_loc_{centre}_s{seed}"]}
+  - {name: "ANCHOR-Loc, ensemble", runs: ["anchor_loc_{centre}_s{seed}"], ensemble: true}
+  - {name: ANCHOR-Full, runs: ["anchor_full_s{seed}"], file: test_predictions_refit.csv}
+  - {name: ANCHOR-Fed without refit, runs: ["anchor_fed_s{seed}"]}
+  - {name: ANCHOR-Full without refit, runs: ["anchor_full_s{seed}"]}
+  - {name: ANCHOR-Loc without AI reader, runs: ["anchor_loc_noai_{centre}_s{seed}"]}
+  - {name: BaseFed + AI reader, runs: ["basefed_ai_s{seed}"]}

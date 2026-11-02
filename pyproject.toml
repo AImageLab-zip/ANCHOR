@@ -1,0 +1,20 @@
+[project]
+name = "anchor"
+version = "1.0.0"
+description = "ANCHOR: anchored consensus heads with offsets per reader, for multi-centre grading under centre conventions"
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "numpy>=2.0",
+    "pandas>=2.2",
+    "pyyaml>=6.0",
+    "scikit-learn>=1.5",
+    "torch>=2.4",
+    "nvflare==2.7.2",
+]
+
+[project.optional-dependencies]
+features = ["timm>=1.0", "torchvision>=0.19", "pillow>=10.4", "pyvips>=3.0"]
+
+[tool.setuptools]
+packages = ["anchor", "anchor.fl"]

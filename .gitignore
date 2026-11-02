@@ -1,0 +1,11 @@
+__pycache__/
+*.py[oc]
+.venv/
+*.egg-info/
+runs/
+results/
+data/
+*.npz
+*.pt
+*.pth
+wandb/

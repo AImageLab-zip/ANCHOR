@@ -1,0 +1,14 @@
+# Shared hyper-parameters of the centralised runs (anchor.train_central, anchor.train_tracereg).
+num_classes: 6
+input_dim: 1536
+attention_dim: 128
+hidden_dim: 64
+dropout: 0.5
+batch_size: 32
+lr: 5.0e-4
+offset_lr: 1.0e-2
+weight_decay: 1.0e-4
+max_bag_size: 512
+epochs: 30
+patience: 10
+num_workers: 4

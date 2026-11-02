@@ -1,0 +1,18 @@
+# FedAvg on the three PAR pseudo-centres: 30 rounds of one local epoch (anchor.fl.job). Method options are added with
+# --set (see scripts/run_par.sh): manifest_set, offsets, phase1_dir, second_column, ai_offsets_dir, consensus_flag, glc.
+clients: [r1_client, r2_client, vir_client]
+num_rounds: 30
+manifest_set: own
+offsets: none
+epochs: 1
+batch_size: 32
+lr: 5.0e-4
+offset_lr: 1.0e-2
+weight_decay: 1.0e-4
+max_bag_size: 512
+num_classes: 6
+input_dim: 1536
+attention_dim: 128
+hidden_dim: 64
+dropout: 0.5
+num_workers: 4
